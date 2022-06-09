@@ -69,8 +69,12 @@ func (t *TgBot) GetUpdates() {
 			if m, ok := t.getMenu(userState); ok {
 				if nextMenu := m.handler(&update, false); nextMenu != "" {
 					if m, ok := t.getMenu(nextMenu); ok {
-						m.handler(&update, true)
-						continue
+						if err := t.stateStorage.StoreUserState(update.Message.From.Id, nextMenu); err == nil {
+							m.handler(&update, true)
+							continue
+						} else {
+							t.client.Send(t.client.Message().SetChatId(update.Message.From.Id).SetText("Error updating user state"))
+						}
 					}
 					t.client.Send(t.client.Message().SetChatId(update.Message.From.Id).SetText(t.defaultResponse))
 				}

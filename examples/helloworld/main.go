@@ -10,6 +10,7 @@ func main() {
 	token := "5416326964:AAFLDSnMsOFv8g7yxqnJNHqkygqqMccEfZQ"
 	bot, err := tgbot.New(token, nil)
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 

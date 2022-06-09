@@ -4,7 +4,7 @@ import "sync"
 
 type StateStorage interface {
 	GetUserState(userID int64) (state string)
-	StoreUserState(userID int64, state string)
+	StoreUserState(userID int64, state string) error
 }
 
 type temporaryStateStorage struct {
@@ -25,6 +25,7 @@ func (t *temporaryStateStorage) GetUserState(userID int64) (state string) {
 	return "Welcome"
 }
 
-func (t *temporaryStateStorage) StoreUserState(userID int64, state string) {
+func (t *temporaryStateStorage) StoreUserState(userID int64, state string) error {
 	t.Store(userID, state)
+	return nil
 }
