@@ -32,7 +32,7 @@ func (t *TgBot) SetDefaultResponse(response string) {
 	t.defaultResponse = response
 }
 
-func (t *TgBot) AddMenu(name string, handler menuHandler) {
+func (t *TgBot) AddMenu(name string, handler func(update *tgbotapi.Update, isSwitched bool) (nextMenu string)) {
 	t.m.Lock()
 	defer t.m.Unlock()
 
@@ -51,14 +51,14 @@ func (t *TgBot) API() (api *tgbotapi.TelegramBot) {
 	return t.client
 }
 
-func (t *TgBot) getMenu(name string) (m menuHandler, exists bool) {
+func (t *TgBot) getMenu(name string) (m func(update *tgbotapi.Update, isSwitched bool) (nextMenu string), exists bool) {
 	t.m.Lock()
 	defer t.m.Unlock()
 
 	var val any
 	val, exists = t.menus.Load(name)
 	if exists {
-		m = val.(menuHandler)
+		m = val.(func(update *tgbotapi.Update, isSwitched bool) (nextMenu string))
 	}
 
 	return
