@@ -14,7 +14,7 @@ func main() {
 		return
 	}
 
-	bot.AddMenu(tgbot.NewMenu("Welcome", func(update *tgbotapi.Update, isSwitched bool) (nextMenu string) {
+	bot.AddMenu("Welcome", func(update *tgbotapi.Update, isSwitched bool) (nextMenu string) {
 		text := update.PrivateMessageText()
 		if !isSwitched && text != "" {
 			if text == "Switch Menu" {
@@ -28,9 +28,9 @@ func main() {
 
 		bot.API().Send(bot.API().Message().SetChatId(update.From().Id).SetText("You're in Welcome Menu").SetReplyMarkup(keyboard))
 		return
-	}))
+	})
 
-	bot.AddMenu(tgbot.NewMenu("Switch", func(update *tgbotapi.Update, isSwitched bool) (nextMenu string) {
+	bot.AddMenu("Switch", func(update *tgbotapi.Update, isSwitched bool) (nextMenu string) {
 		if !isSwitched {
 			if update.PrivateMessageText() == "Back" {
 				return "Welcome"
@@ -39,7 +39,7 @@ func main() {
 
 		bot.API().Send(bot.API().Message().SetChatId(update.From().Id).SetText("You're in Switched Menu").SetReplyMarkup(bot.BackReplyMarkupKeyboard()))
 		return
-	}))
+	})
 
 	bot.GetUpdates()
 	fmt.Println(bot)
